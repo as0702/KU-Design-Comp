@@ -1,0 +1,59 @@
+/*page*/
+body {
+    margin: 0;
+    font: 16px Arial;
+    background: #0f538b;
+}
+
+/*headers, including h1 and h2*/
+header {
+    background: #2b2118;
+    color: white;
+    text-align: center;
+    padding: 10px;
+}
+
+/*background for cards*/
+main {
+    max-width: 500px;
+    margin: auto;
+    padding: 16px;
+}
+
+/*cards. ex: place order, card order, etc.*/
+.card {
+    background: white;
+    padding: 16px;
+    margin-bottom: 16px;
+    border-radius: 16px;
+}
+
+label {
+    /*prevent inline text*/
+    display: block;
+    margin-top: 12px;
+}
+
+/*input boxes*/
+input[type=text], input[type=number] {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+}
+
+/*the 2 submit buttons*/
+button {
+    width: 100%;
+    margin-top: 16px;
+    padding: 12px;
+    color: white;
+    background: #228ad8;
+    border: none;
+}
+
+/*items in catalog list*/
+.product {
+    display: block;
+    padding: 10px;
+    border: 1px solid #ccc;
+}

@@ -3,14 +3,18 @@
 ## Project Overview
 - Gunter’s Forge is a small Java web application that simulates an online blacksmith shop. Customers can browse available items, place an order, and check its status in the forge’s queue. The application runs locally and serves a simple web interface using Java’s built-in HTTP server.
 ## Setup Instructions
-1. Install JDK 11 or later.
-2. Open a terminal and change to the project’s root folder (the folder containing `app/` and `web/`).
-3. Compile the Java files:
-   ```bash
-   javac -d out app/*.java
-4. Start the server with java -cp out MyProgram
-5. Open the local host in a browser, http://localhost:8000
-6. To stop the server, press Ctrl+C in the terminal
+Gunter's Forge runs on a localhost at port 8000 by default. Setup requires the two following JDK (java developer kit) terminal commands:
+
+javac -d out app/*.java
+
+This line will complie the program into the the .gitignored "out" folder into java bytes
+
+java -cp app MyProgram
+
+This will run the program class path from the MyProgram file. The local server will be activated after this
+
+To stop the localhost, click 
+
 ## Usage Guide
 - Start the server by following the setup instructions, open the localhost.
 - Under **Place an Order**, enter a name, select an item, and enter a delivery distance, selecting from the available items.
@@ -26,6 +30,8 @@
 - Listed Below
 ### Jacob Palan
  - Wrote README.md
+ - HTML and CSS
+ - Edited OrderQueue and BlacksmithOrder
+ - Update MyProgram for localhosting
 ### Aarav Sharma
- - Backend
- - Java
+ - Backend/Java
