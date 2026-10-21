@@ -8,6 +8,7 @@ public class OrderQueue {
     //Creates an empty list when the queue is being made
     public OrderQueue() {
         list = new ArrayList<BlacksmithOrder>();
+        completedOrders = new ArrayList<BlacksmithOrder>();
     }
 
     // Adds a new order to the end of the queue
@@ -65,4 +66,5 @@ public class OrderQueue {
             }
         }
         return null;
+    }
 }

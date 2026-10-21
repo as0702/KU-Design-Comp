@@ -10,7 +10,7 @@ public class BlacksmithOrder {
     private int deliveryDistance;
 
     //Sets the item's name, delivery distance, set and increase order number, and customer name when an order is created
-    public BlacksmithOrder(String name, String title distance) {
+    public BlacksmithOrder(String name, String title, int distance) {
         orderNumber = nextOrderNumber;
         nextOrderNumber++;
         customerName = name;
@@ -31,7 +31,7 @@ public class BlacksmithOrder {
     public String getProductTitle() {
         return productTitle;
     }
-    
+
     public int getDeliveryDistance() {
         return deliveryDistance;
     }

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+    <!--Create head-->
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gunter's Forge</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header><h1>Gunter's Forge</h1></header>
+
+  <main>
+    <!--Submission form-->
+    <section class="card">
+      <h2>Place an Order</h2>
+      <form method="post" action="/order">
+
+        <label for="name">Name for order: </label>
+        <input id="name" name="name" type="text" maxlength="40" required>
+        <!--CATALOG-->
+        <label for="distance">Delivery distance (miles)</label>
+        <input id="distance" name="distance" type="number" min="0" max="100" value="0" required>
+
+        <button>Submit form</button>
+      </form>
+    </section>
+
+    <!--Order tracking form-->
+    <section class="card">
+      <h2>Track Your Order</h2>
+      <form method="get" action="/status">
+        <label for="number">Order number</label>
+        <input id="number" name="number" type="number" min="1" required>
+        <button>Check the to-do list</button>
+      </form>
+    </section>
+  </main>
+</body>
+</html>
