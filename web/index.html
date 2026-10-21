@@ -35,6 +35,26 @@
         <button>Check the to-do list</button>
       </form>
     </section>
+
+    <!--Mini game: mining sim-->
+    <section class="card">
+      <h2>Mining Sim</h2>
+      <p class="counter">Squares Smashed: <span id="counter">0</span></p>
+      <div id="square" class="square"></div>
+    </section>
   </main>
+
+  <!--S-->
+  <script>
+    const square = document.getElementById("square");
+    const counter = document.getElementById("counter");
+
+    square.addEventListener("click", async () => {
+      const game = await (await fetch("/smash", { method: "POST" })).json();
+      square.style.setProperty("--lightness", game.lightness + "%");
+      square.classList.toggle("shake", game.almostBroken);
+      counter.textContent = game.squaresSmashed;
+    });
+  </script>
 </body>
 </html>

@@ -55,5 +55,38 @@ button {
 .product {
     display: block;
     padding: 10px;
-    border: 1px solid #ccc;
+    border: 10px solid #ccc;
+}
+
+/*mini game*/
+.counter {
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+
+/*--lightness is set by the minigame script, starts at 80%*/
+.square {
+  background-color:  rgb(81, 80, 80);;
+  width: 300px;
+  height: 300px;
+  /*centering code*/
+  margin: 0 auto;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background-color 0.1s ease, transform 0.05s ease;
+}
+
+/*squish square when clicked*/
+.square:active {
+  transform: scale(0.90);
+}
+
+/*shake when one click from breaking*/
+.shake {
+  animation: crackShake 0.2s infinite;
+}
+
+@keyframes crackShake {
+  0%   { transform: translate(1px, 1px) rotate(0deg); }
+  100% { transform: translate(-1px, -2px) rotate(-10deg); }
 }

@@ -28,6 +28,13 @@ public class MyProgram
     private static OrderQueue queue = new OrderQueue();
     private static long forgeStartTime = System.currentTimeMillis();
 
+    //minigame: clicks needed to smash one square
+    private static final int MAX_CLICKS = 5;
+    private static int clickCount = 0;
+    private static int squaresSmashed = 0;
+
+    private static int gold_count = 0;
+
     //Intialize server
     //throws IOException if the server fails to start
     public static void main(String[] args) throws IOException
@@ -38,6 +45,7 @@ public class MyProgram
         server.createContext("/style.css", MyProgram::handleStyle);
         server.createContext("/order", MyProgram::handleOrder);
         server.createContext("/status", MyProgram::handleStatus);
+        server.createContext("/smash", MyProgram::handleSmash);
         server.start();
         //System.out.println("Gunter's Forge is open at http://localhost:8000");
     }
@@ -83,15 +91,8 @@ public class MyProgram
     //show a browser alert, then go back to the home page
     private static String alertPage(String message)
     {
-        return "<!DOCTYPE html>
-                    <html>
-                        <head>
-                            <title>Gunter's Forge</title>
-                        </head>"
-                    +   "<body>
-                            <script>alert('" + escapeJs(message) + "'); location.replace('/');</script>
-                        </body>
-                    </html>";
+        return "<!DOCTYPE html><html><head><title>Gunter's Forge</title></head>"
+                + "<body><script>alert('" + escapeJs(message) + "'); location.replace('/');</script></body></html>";
     }
 
     //create form
@@ -189,6 +190,26 @@ public class MyProgram
             queue.removeNextOrder();
             forgeStartTime += FORGE_TIME_MS;
         }
+    }
+
+    //handleSmash: minigame click, square darkens each hit and breaks on the last one
+    private static synchronized void handleSmash(HttpExchange exchange) throws IOException
+    {
+        clickCount++;
+        boolean broken = clickCount >= MAX_CLICKS;
+        if (broken) {
+            squaresSmashed++;
+            gold_count += 10;
+            clickCount = 0;
+        }
+        //lightness drops from 80% each click, back to 80% for a new square
+        int lightness = 80 - clickCount * 12;
+        boolean almostBroken = clickCount == MAX_CLICKS - 1;
+
+        send(exchange, "application/json", "{\"lightness\":" + lightness
+                + ",\"squaresSmashed\":" + squaresSmashed
+                + ",\"broken\":" + broken
+                + ",\"almostBroken\":" + almostBroken + "}");
     }
 
     /*
