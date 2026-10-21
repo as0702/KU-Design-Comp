@@ -72,6 +72,7 @@ public class MyProgram {
                 System.out.println("Exiting Store...");
                 running = false;
             } else {
+                //Notifies the user if an invalid option is entered
                 System.out.println("\nInvalid Option");
             }
         }
