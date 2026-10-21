@@ -1,8 +1,8 @@
 /*page*/
 body {
     margin: 0;
-    font: 16px Arial;
-    background: #0f538b;
+    font: 16px Metamorphous;
+    background: #7d5540;
 }
 
 /*headers, including h1 and h2*/
@@ -22,6 +22,7 @@ main {
 
 /*cards. ex: place order, card order, etc.*/
 .card {
+    position: relative;
     background: white;
     padding: 16px;
     margin-bottom: 16px;
@@ -64,19 +65,30 @@ button {
   margin-bottom: 20px;
 }
 
-/*--lightness is set by the minigame script, starts at 80%*/
+/*gold ore block, --damage (0 to 1) is set by the minigame script*/
 .square {
-  background-color:  rgb(81, 80, 80);;
-  width: 300px;
-  height: 300px;
+  position: relative;
+  width: 256px;
+  height: 256px;
   /*centering code*/
   margin: 0 auto;
   cursor: pointer;
-  border-radius: 6px;
-  transition: background-color 0.1s ease, transform 0.05s ease;
+  background: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' shape-rendering='crispEdges'><rect width='16' height='16' fill='%237f7f7f'/><rect x='2' y='0' width='1' height='1' fill='%239a9a9a'/><rect x='6' y='0' width='1' height='1' fill='%235e5e5e'/><rect x='10' y='0' width='1' height='1' fill='%239a9a9a'/><rect x='15' y='0' width='1' height='1' fill='%235e5e5e'/><rect x='1' y='1' width='1' height='1' fill='%239a9a9a'/><rect x='3' y='1' width='1' height='1' fill='%23fcee4b'/><rect x='4' y='1' width='1' height='1' fill='%23fcee4b'/><rect x='8' y='1' width='1' height='1' fill='%235e5e5e'/><rect x='12' y='1' width='1' height='1' fill='%239a9a9a'/><rect x='2' y='2' width='1' height='1' fill='%23fcee4b'/><rect x='3' y='2' width='1' height='1' fill='%23fffbb0'/><rect x='4' y='2' width='1' height='1' fill='%23c49b16'/><rect x='5' y='2' width='1' height='1' fill='%23fcee4b'/><rect x='11' y='2' width='1' height='1' fill='%235e5e5e'/><rect x='14' y='2' width='1' height='1' fill='%239a9a9a'/><rect x='0' y='3' width='1' height='1' fill='%235e5e5e'/><rect x='3' y='3' width='1' height='1' fill='%23fcee4b'/><rect x='4' y='3' width='1' height='1' fill='%23c49b16'/><rect x='6' y='3' width='1' height='1' fill='%235e5e5e'/><rect x='8' y='3' width='1' height='1' fill='%239a9a9a'/><rect x='10' y='4' width='1' height='1' fill='%23fcee4b'/><rect x='11' y='4' width='1' height='1' fill='%23fcee4b'/><rect x='15' y='4' width='1' height='1' fill='%235e5e5e'/><rect x='1' y='5' width='1' height='1' fill='%239a9a9a'/><rect x='4' y='5' width='1' height='1' fill='%235e5e5e'/><rect x='9' y='5' width='1' height='1' fill='%23fcee4b'/><rect x='10' y='5' width='1' height='1' fill='%23fffbb0'/><rect x='11' y='5' width='1' height='1' fill='%23c49b16'/><rect x='12' y='5' width='1' height='1' fill='%23fcee4b'/><rect x='6' y='6' width='1' height='1' fill='%239a9a9a'/><rect x='10' y='6' width='1' height='1' fill='%23fcee4b'/><rect x='11' y='6' width='1' height='1' fill='%23c49b16'/><rect x='13' y='6' width='1' height='1' fill='%235e5e5e'/><rect x='1' y='7' width='1' height='1' fill='%235e5e5e'/><rect x='14' y='7' width='1' height='1' fill='%239a9a9a'/><rect x='3' y='8' width='1' height='1' fill='%239a9a9a'/><rect x='5' y='8' width='1' height='1' fill='%23fcee4b'/><rect x='6' y='8' width='1' height='1' fill='%23fcee4b'/><rect x='9' y='8' width='1' height='1' fill='%235e5e5e'/><rect x='4' y='9' width='1' height='1' fill='%23fcee4b'/><rect x='5' y='9' width='1' height='1' fill='%23fffbb0'/><rect x='6' y='9' width='1' height='1' fill='%23c49b16'/><rect x='7' y='9' width='1' height='1' fill='%23fcee4b'/><rect x='12' y='9' width='1' height='1' fill='%239a9a9a'/><rect x='0' y='10' width='1' height='1' fill='%239a9a9a'/><rect x='2' y='10' width='1' height='1' fill='%235e5e5e'/><rect x='5' y='10' width='1' height='1' fill='%23fcee4b'/><rect x='6' y='10' width='1' height='1' fill='%23c49b16'/><rect x='8' y='10' width='1' height='1' fill='%239a9a9a'/><rect x='14' y='10' width='1' height='1' fill='%235e5e5e'/><rect x='11' y='11' width='1' height='1' fill='%23fcee4b'/><rect x='12' y='11' width='1' height='1' fill='%23fcee4b'/><rect x='2' y='12' width='1' height='1' fill='%239a9a9a'/><rect x='6' y='12' width='1' height='1' fill='%235e5e5e'/><rect x='10' y='12' width='1' height='1' fill='%23fcee4b'/><rect x='11' y='12' width='1' height='1' fill='%23fffbb0'/><rect x='12' y='12' width='1' height='1' fill='%23c49b16'/><rect x='13' y='12' width='1' height='1' fill='%23fcee4b'/><rect x='8' y='13' width='1' height='1' fill='%239a9a9a'/><rect x='11' y='13' width='1' height='1' fill='%23fcee4b'/><rect x='12' y='13' width='1' height='1' fill='%23c49b16'/><rect x='14' y='13' width='1' height='1' fill='%239a9a9a'/><rect x='0' y='14' width='1' height='1' fill='%235e5e5e'/><rect x='3' y='14' width='1' height='1' fill='%239a9a9a'/><rect x='5' y='15' width='1' height='1' fill='%235e5e5e'/><rect x='9' y='15' width='1' height='1' fill='%239a9a9a'/><rect x='12' y='15' width='1' height='1' fill='%235e5e5e'/></svg>") center / 100% 100%;
+  image-rendering: pixelated;
+  filter: brightness(calc(1 - var(--damage, 0) * 0.5));
+  transition: filter 0.1s ease, transform 0.05s ease;
 }
 
-/*squish square when clicked*/
+/*minecraft style cracks that get darker as the block is hit*/
+.square::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' shape-rendering='crispEdges' fill='%23111'><rect x='7' y='2' width='1' height='3'/><rect x='6' y='5' width='1' height='2'/><rect x='8' y='5' width='2' height='1'/><rect x='10' y='6' width='1' height='3'/><rect x='5' y='7' width='1' height='3'/><rect x='3' y='10' width='2' height='1'/><rect x='11' y='9' width='2' height='1'/><rect x='6' y='10' width='1' height='3'/><rect x='12' y='10' width='1' height='2'/><rect x='2' y='4' width='2' height='1'/><rect x='4' y='5' width='1' height='1'/></svg>") center / 100% 100%;
+  opacity: var(--damage, 0);
+}
+
+/*squish block when clicked*/
 .square:active {
   transform: scale(0.90);
 }
@@ -89,4 +101,135 @@ button {
 @keyframes crackShake {
   0%   { transform: translate(1px, 1px) rotate(0deg); }
   100% { transform: translate(-1px, -2px) rotate(-10deg); }
+}
+
+
+/*floating +gold text, placed by showGain()*/
+.gain {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  font-size: 32px;
+  font-weight: bold;
+  color: #f5c518;
+  text-shadow: 0 0 2px #000, 2px 2px 0 #5a3d00;
+  pointer-events: none;
+  animation: floatUp 0.9s ease-out forwards;
+}
+
+@keyframes floatUp {
+  0%   { opacity: 0; margin-top: 0; }
+  15%  { opacity: 1; }
+  100% { opacity: 0; margin-top: -70px; }
+}
+
+/*viking block blast*/
+.hint {
+  font-size: 14px;
+  color: #555;
+}
+
+/*the longship deck*/
+.board-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 340px;
+  margin: 0 auto;
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(8, 1fr);
+  gap: 3px;
+  padding: 8px;
+  aspect-ratio: 1;
+  background: #3b2614;
+  border: 4px solid #6e4a26;
+  border-radius: 8px;
+}
+
+/*empty deck planks*/
+.cell {
+  background: repeating-linear-gradient(90deg, #5c3c1e 0 6px, #66442a 6px 12px);
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.cell.ghost {
+  background: #c9a227;
+  opacity: 0.6;
+}
+
+.cell.blocked {
+  background: #8b1d1d;
+  opacity: 0.6;
+}
+
+/*round shield with an iron boss in the middle*/
+.shield {
+  --shield: #b3261e;
+  background: radial-gradient(circle, #9aa0a6 0 18%, #3d3d3d 19% 24%, var(--shield) 25% 100%);
+  border: 2px solid #2b2b2b;
+  border-radius: 50%;
+}
+
+.shield.blue  { --shield: #1f4e8c; }
+.shield.green { --shield: #2f6b3a; }
+.shield.amber { --shield: #c9a227; }
+.shield.bone  { --shield: #d8cfb8; }
+
+/*the hold: 3 pieces to choose from*/
+.tray {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.slot {
+  flex: 1;
+  height: 96px;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #efe6d2;
+  border: 3px solid transparent;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.slot.selected {
+  border-color: #c9a227;
+}
+
+.slot:disabled {
+  cursor: default;
+  opacity: 0.4;
+}
+
+.mini {
+  display: grid;
+  gap: 2px;
+}
+
+/*game over screen*/
+.ragnarok {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  text-align: center;
+  font-size: 22px;
+  font-weight: bold;
+  color: white;
+  background: rgba(20, 10, 0, 0.8);
+  border-radius: 8px;
+}
+
+.ragnarok[hidden] {
+  display: none;
 }

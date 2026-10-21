@@ -33,4 +33,9 @@ public class StoreCatalog {
     public ArrayList<Integer> getPrices() {
         return prices;
     }
+
+    //Returns the price of one item, prices are in the same order as items
+    public int getPrice(String item) {
+        return prices.get(items.indexOf(item));
+    }
 }

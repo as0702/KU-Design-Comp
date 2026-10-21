@@ -46,6 +46,7 @@ public class MyProgram
         server.createContext("/order", MyProgram::handleOrder);
         server.createContext("/status", MyProgram::handleStatus);
         server.createContext("/smash", MyProgram::handleSmash);
+        server.createContext("/blast", MyProgram::handleBlast);
         server.start();
         //System.out.println("Gunter's Forge is open at http://localhost:8000");
     }
@@ -84,7 +85,9 @@ public class MyProgram
         }
 
         //replcace the placeholder in HTML with item list
-        String html = Files.readString(Paths.get("web/index.html")).replace("<!--CATALOG-->", items);
+        String html = Files.readString(Paths.get("web/index.html")).replace("<!--CATALOG-->", items)
+                .replace("<!--GOLD-->", String.valueOf(gold_count))
+                .replace("<!--MINED-->", String.valueOf(squaresSmashed));
         send(exchange, "text/html", html);
     }
 
@@ -144,6 +147,12 @@ public class MyProgram
             return;
         }
 
+        if (gold_count < catalog.getPrice(item)) {
+            send(exchange, "text/html", alertPage("keep mining to get gold u brokie."));
+            return;
+        }
+        gold_count -= catalog.getPrice(item);
+
         BlacksmithOrder order = new BlacksmithOrder(name, item, distance);
         queue.addOrder(order);
 
@@ -192,7 +201,7 @@ public class MyProgram
         }
     }
 
-    //handleSmash: minigame click, square darkens each hit and breaks on the last one
+    //handleSmash: minigame click, ore block cracks each hit and breaks on the last one
     private static synchronized void handleSmash(HttpExchange exchange) throws IOException
     {
         clickCount++;
@@ -202,14 +211,30 @@ public class MyProgram
             gold_count += 10;
             clickCount = 0;
         }
-        //lightness drops from 80% each click, back to 80% for a new square
-        int lightness = 80 - clickCount * 12;
+        //damage goes from 0 (new block) toward 1 (about to break)
+        double damage = (double) clickCount / MAX_CLICKS;
         boolean almostBroken = clickCount == MAX_CLICKS - 1;
 
-        send(exchange, "application/json", "{\"lightness\":" + lightness
+        send(exchange, "application/json", "{\"damage\":" + damage
+                + ",\"gold\":" + gold_count
                 + ",\"squaresSmashed\":" + squaresSmashed
                 + ",\"broken\":" + broken
                 + ",\"almostBroken\":" + almostBroken + "}");
+    }
+
+    //handleBlast: raid blast cleared some lines, each line is worth 5 gold
+    private static synchronized void handleBlast(HttpExchange exchange) throws IOException
+    {
+        String body = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
+        int lines = toNumber(readForm(body).getOrDefault("lines", ""));
+        //one move can clear at most 8 rows + 8 columns
+        if (lines < 0 || lines > 16) {
+            lines = 0;
+        }
+        int earned = lines * 5;
+        gold_count += earned;
+
+        send(exchange, "application/json", "{\"gold\":" + gold_count + ",\"earned\":" + earned + "}");
     }
 
     /*

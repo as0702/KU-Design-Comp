@@ -18,6 +18,7 @@
 
         <label for="name">Name for order: </label>
         <input id="name" name="name" type="text" maxlength="40" required>
+        <p>Gold: <span class="gold"><!--GOLD--></span></p>
         <!--CATALOG-->
         <label for="distance">Delivery distance (miles)</label>
         <input id="distance" name="distance" type="number" min="0" max="100" value="0" required>
@@ -39,22 +40,232 @@
     <!--Mini game: mining sim-->
     <section class="card">
       <h2>Mining Sim</h2>
-      <p class="counter">Squares Smashed: <span id="counter">0</span></p>
+      <p class="counter">Ore Mined: <span id="counter"><!--MINED--></span> | Gold: <span class="gold"><!--GOLD--></span></p>
       <div id="square" class="square"></div>
+    </section>
+
+    <!--Mini game: viking block blast-->
+    <section class="card">
+      <h2>Raid Blast</h2>
+      <p class="counter">Plunder: <span id="score">0</span> | Best: <span id="best">0</span></p>
+      <p class="hint">Pick a shield from the hold, then place it on the deck. Fill a row or column to clear it for 5 gold.</p>
+      <div class="board-wrap">
+        <div id="board" class="board"></div>
+        <div id="ragnarok" class="ragnarok" hidden>
+          <p>Ragnarök!<br>No room left on the ship.</p>
+          <button id="restart" type="button">Sail again</button>
+        </div>
+      </div>
+      <div id="tray" class="tray"></div>
     </section>
   </main>
 
-  <!--S-->
+  <!--Script: mining sim-->
   <script>
     const square = document.getElementById("square");
     const counter = document.getElementById("counter");
+    const goldCounts = document.querySelectorAll(".gold");
 
     square.addEventListener("click", async () => {
       const game = await (await fetch("/smash", { method: "POST" })).json();
-      square.style.setProperty("--lightness", game.lightness + "%");
+      square.style.setProperty("--damage", game.damage);
       square.classList.toggle("shake", game.almostBroken);
       counter.textContent = game.squaresSmashed;
+      //update gold in both the item menu and the minigame
+      goldCounts.forEach(gold => gold.textContent = game.gold);
+      if (game.broken) {
+        showGain(square, "+10");
+      }
     });
+
+    //float a "+gold" message up from the middle of an element
+    function showGain(target, text) {
+      const card = target.closest(".card");
+      const pop = document.createElement("span");
+      pop.className = "gain";
+      pop.textContent = text;
+      const box = target.getBoundingClientRect();
+      const cardBox = card.getBoundingClientRect();
+      pop.style.left = box.left - cardBox.left + box.width / 2 + "px";
+      pop.style.top = box.top - cardBox.top + box.height / 2 + "px";
+      card.appendChild(pop);
+      pop.addEventListener("animationend", () => pop.remove());
+    }
+  </script>
+
+  <!--Script: viking block blast-->
+  <script>
+    const SIZE = 8;
+    const COLORS = ["red", "blue", "green", "amber", "bone"];
+    //each piece is a list of [row, col] cells
+    const PIECES = [
+      [[0,0]],
+      [[0,0],[0,1]], [[0,0],[1,0]],
+      [[0,0],[0,1],[0,2]], [[0,0],[1,0],[2,0]],
+      [[0,0],[0,1],[0,2],[0,3]], [[0,0],[1,0],[2,0],[3,0]],
+      [[0,0],[0,1],[0,2],[0,3],[0,4]], [[0,0],[1,0],[2,0],[3,0],[4,0]],
+      [[0,0],[0,1],[1,0],[1,1]],
+      [[0,0],[0,1],[0,2],[1,0],[1,1],[1,2],[2,0],[2,1],[2,2]],
+      [[0,0],[1,0],[1,1]], [[0,0],[0,1],[1,0]], [[0,0],[0,1],[1,1]], [[0,1],[1,0],[1,1]],
+      [[0,0],[1,0],[2,0],[2,1]], [[0,0],[0,1],[0,2],[1,0]], [[0,0],[0,1],[1,1],[2,1]], [[0,2],[1,0],[1,1],[1,2]],
+      [[0,0],[0,1],[0,2],[1,1]], [[0,1],[1,0],[1,1],[2,1]], [[0,1],[1,0],[1,1],[1,2]], [[0,0],[1,0],[1,1],[2,0]]
+    ];
+
+    const boardEl = document.getElementById("board");
+    const trayEl = document.getElementById("tray");
+    const scoreEl = document.getElementById("score");
+    const bestEl = document.getElementById("best");
+    const ragnarokEl = document.getElementById("ragnarok");
+
+    let board, tray, selected, score;
+    let best = 0;
+    const cells = [];
+
+    //build the 8x8 deck once
+    for (let r = 0; r < SIZE; r++) {
+      for (let c = 0; c < SIZE; c++) {
+        const cell = document.createElement("div");
+        cell.className = "cell";
+        cell.addEventListener("mouseenter", () => preview(r, c));
+        cell.addEventListener("mouseleave", () => preview(-1, -1));
+        cell.addEventListener("click", () => place(r, c));
+        boardEl.appendChild(cell);
+        cells.push(cell);
+      }
+    }
+
+    function newGame() {
+      board = Array.from({ length: SIZE }, () => Array(SIZE).fill(null));
+      score = 0;
+      selected = null;
+      refillTray();
+      ragnarokEl.hidden = true;
+      draw();
+    }
+
+    function randomPiece() {
+      return {
+        cells: PIECES[Math.floor(Math.random() * PIECES.length)],
+        color: COLORS[Math.floor(Math.random() * COLORS.length)]
+      };
+    }
+
+    function refillTray() {
+      tray = [randomPiece(), randomPiece(), randomPiece()];
+    }
+
+    function fits(piece, r, c) {
+      return piece.cells.every(([dr, dc]) => {
+        const row = r + dr, col = c + dc;
+        return row < SIZE && col < SIZE && board[row][col] === null;
+      });
+    }
+
+    function fitsAnywhere(piece) {
+      for (let r = 0; r < SIZE; r++) {
+        for (let c = 0; c < SIZE; c++) {
+          if (fits(piece, r, c)) return true;
+        }
+      }
+      return false;
+    }
+
+    //show where the selected piece would land
+    function preview(r, c) {
+      cells.forEach(cell => cell.classList.remove("ghost", "blocked"));
+      if (selected === null || r < 0) return;
+      const piece = tray[selected];
+      const ok = fits(piece, r, c);
+      piece.cells.forEach(([dr, dc]) => {
+        if (r + dr < SIZE && c + dc < SIZE) {
+          cells[(r + dr) * SIZE + c + dc].classList.add(ok ? "ghost" : "blocked");
+        }
+      });
+    }
+
+    function place(r, c) {
+      if (selected === null) return;
+      const piece = tray[selected];
+      if (!fits(piece, r, c)) return;
+
+      piece.cells.forEach(([dr, dc]) => board[r + dr][c + dc] = piece.color);
+      score += piece.cells.length;
+      tray[selected] = null;
+      selected = null;
+
+      //find full rows and columns before clearing so crossing lines both count
+      const fullRows = [], fullCols = [];
+      for (let i = 0; i < SIZE; i++) {
+        if (board[i].every(cell => cell !== null)) fullRows.push(i);
+        if (board.every(row => row[i] !== null)) fullCols.push(i);
+      }
+      fullRows.forEach(row => board[row].fill(null));
+      fullCols.forEach(col => board.forEach(row => row[col] = null));
+
+      const lines = fullRows.length + fullCols.length;
+      if (lines > 0) {
+        score += lines * SIZE * lines;
+        claimGold(lines);
+      }
+
+      if (tray.every(p => p === null)) refillTray();
+      draw();
+
+      if (!tray.some(p => p !== null && fitsAnywhere(p))) {
+        best = Math.max(best, score);
+        bestEl.textContent = best;
+        ragnarokEl.hidden = false;
+      }
+    }
+
+    //cleared lines turn into gold on the server
+    async function claimGold(lines) {
+      const res = await fetch("/blast", { method: "POST", body: "lines=" + lines });
+      const data = await res.json();
+      goldCounts.forEach(gold => gold.textContent = data.gold);
+      showGain(boardEl, "+" + data.earned);
+    }
+
+    function draw() {
+      for (let r = 0; r < SIZE; r++) {
+        for (let c = 0; c < SIZE; c++) {
+          const color = board[r][c];
+          cells[r * SIZE + c].className = color ? "cell shield " + color : "cell";
+        }
+      }
+      scoreEl.textContent = score;
+
+      trayEl.innerHTML = "";
+      tray.forEach((piece, i) => {
+        const slot = document.createElement("button");
+        slot.type = "button";
+        slot.className = "slot" + (i === selected ? " selected" : "");
+        if (piece) {
+          const rows = Math.max(...piece.cells.map(([r]) => r)) + 1;
+          const cols = Math.max(...piece.cells.map(([, c]) => c)) + 1;
+          const mini = document.createElement("div");
+          mini.className = "mini";
+          mini.style.gridTemplate = `repeat(${rows}, 14px) / repeat(${cols}, 14px)`;
+          piece.cells.forEach(([r, c]) => {
+            const block = document.createElement("div");
+            block.className = "shield " + piece.color;
+            block.style.gridArea = `${r + 1} / ${c + 1}`;
+            mini.appendChild(block);
+          });
+          slot.appendChild(mini);
+          slot.addEventListener("click", () => {
+            selected = selected === i ? null : i;
+            draw();
+          });
+        } else {
+          slot.disabled = true;
+        }
+        trayEl.appendChild(slot);
+      });
+    }
+
+    document.getElementById("restart").addEventListener("click", newGame);
+    newGame();
   </script>
 </body>
 </html>
