@@ -35,3 +35,12 @@
  - Backend
  - Java
  - Wrote README.md
+##AI usage
+AI was used for the following tasks in this project
+###Debugging
+When we came across issues in the code, and failed to solve it after multiple tries, we used ai to find issues and guide us in the direction of solving them.
+ ###Integrating terminal based java into the program to make it web based.
+Originally, this project was meant to be experienced in the exclusively terminals. While our MyProgram logic was right, we used AI to convert it into a series of methods for integration with our new front end.
+###Minigame
+The mining minigame used AI to create the minecraft gold pixel art and +10 gold effect
+AI was used to make the Raid Blast minigame
