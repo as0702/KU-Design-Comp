@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Gunter's Forge</title>
   <link rel="stylesheet" href="/style.css">
+  <script src="/shop.js" defer></script>
 </head>
 <body>
   <header><h1>Gunter's Forge</h1></header>
@@ -14,6 +15,7 @@
     <!--Submission form-->
     <section class="card">
       <h2>Place an Order</h2>
+      <p>Your gold: <span id="shop-gold-count">0</span></p>
       <form method="post" action="/order">
 
         <label for="name">Name for order: </label>
@@ -22,7 +24,8 @@
         <label for="distance">Delivery distance (miles)</label>
         <input id="distance" name="distance" type="number" min="0" max="100" value="0" required>
 
-        <button>Submit form</button>
+        <p id="order-shop-message" role="status" aria-live="polite">Purchases are unavailable until your gold covers the selected item's price.</p>
+        <button id="submit-order" disabled>Submit form</button>
       </form>
     </section>
 
@@ -35,6 +38,7 @@
         <button>Check the to-do list</button>
       </form>
     </section>
+
   </main>
 </body>
 </html>
