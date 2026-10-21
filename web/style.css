@@ -51,6 +51,16 @@ button {
     border: none;
 }
 
+.button-link {
+    display: block;
+    margin-top: 16px;
+    padding: 12px;
+    color: white;
+    background: #228ad8;
+    text-align: center;
+    text-decoration: none;
+}
+
 /*items in catalog list*/
 .product {
     display: block;
